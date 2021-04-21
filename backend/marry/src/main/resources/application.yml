@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mariadb://localhost:3306/wouldumarryme?useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: root
-    password: 191212
+    password: 191212 #root
     driver-class-name: org.mariadb.jdbc.Driver
 
   jpa:
@@ -16,3 +16,15 @@ logging.level:
   org.hibernate.SQL: debug
   #org.hibernate.type: trace
 
+# AWS S3
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIAY3BUOWP6Y52BJTNU
+      secretKey: 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
+    s3:
+      bucket: agfeawstest
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
