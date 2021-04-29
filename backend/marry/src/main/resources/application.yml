@@ -24,7 +24,7 @@ cloud:
       accessKey: AKIAY3BUOWP6Y52BJTNU
       secretKey: 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
     s3:
-      bucket: agfeawstest
+      bucket: wouldumarryme
     region:
       static: ap-northeast-2
     stack:
