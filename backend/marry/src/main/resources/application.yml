@@ -5,6 +5,13 @@ spring:
     password: ssafyb106 #root
     driver-class-name: org.mariadb.jdbc.Driver
     sql-script-encoding: utf-8
+  #Multipart File 용량 설정
+  servlet:
+    multipart:
+      max-file-size:  50MB
+      max-request-size: 50MB
+
+
 
   jpa:
     hibernate:
@@ -35,3 +42,6 @@ server:
   servlet:
     context-path: /api
   port: 8080
+
+
+
