@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import styles from './kakaoMap.module.css'
-import { useEffect } from 'react';
+import React, { useState } from "react";
+import styles from "./kakaoMap.module.css";
+import { useEffect } from "react";
 
 const { kakao } = window;
 const KakaoMap = (props) => {
@@ -106,12 +106,12 @@ const KakaoMap = (props) => {
       var mapContainer = document.getElementById('searchedMap'), // 지도를 표시할 div
       mapOption = { 
           center: new kakao.maps.LatLng(mapInfo.y, mapInfo.x), // 지도의 중심좌표
-          level: 3 // 지도의 확대 레벨
-      };
-      var map = new kakao.maps.Map(mapContainer,  mapOption); // 지도를 생성합니다
-      var markerPosition  = new kakao.maps.LatLng(mapInfo.y, mapInfo.x); 
+          level: 3, // 지도의 확대 레벨
+        };
+      var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+      var markerPosition = new kakao.maps.LatLng(mapInfo.y, mapInfo.x);
       var marker = new kakao.maps.Marker({
-        position: markerPosition
+        position: markerPosition,
       });
       marker.setMap(map);
     }
