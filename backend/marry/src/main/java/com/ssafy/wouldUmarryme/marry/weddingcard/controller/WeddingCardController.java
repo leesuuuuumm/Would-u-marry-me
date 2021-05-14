@@ -4,8 +4,6 @@ import com.ssafy.wouldUmarryme.marry.account.domain.Account;
 import com.ssafy.wouldUmarryme.marry.common.annotation.CurrentAccount;
 import com.ssafy.wouldUmarryme.marry.weddingcard.dto.CreateWeddingCardRequest;
 import com.ssafy.wouldUmarryme.marry.weddingcard.dto.InputWeddingCardRequest;
-import com.ssafy.wouldUmarryme.marry.weddingcard.dto.RetrieveWeddingCardRequest;
-import com.ssafy.wouldUmarryme.marry.weddingcard.dto.TemplateNumberRequest;
 import com.ssafy.wouldUmarryme.marry.weddingcard.service.WeddingCardService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

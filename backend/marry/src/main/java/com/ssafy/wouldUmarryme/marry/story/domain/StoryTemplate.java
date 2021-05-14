@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 import javax.persistence.*;
 
@@ -14,7 +16,6 @@ import javax.persistence.*;
 @Setter
 @Table(name = "story_templates")
 public class StoryTemplate {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "story_template_id")
@@ -27,7 +28,7 @@ public class StoryTemplate {
     private String imgUrl;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "template" , fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(mappedBy = "template" ,cascade = CascadeType.ALL ,fetch = FetchType.LAZY, orphanRemoval = true)
     private Story story;
 
     @Builder

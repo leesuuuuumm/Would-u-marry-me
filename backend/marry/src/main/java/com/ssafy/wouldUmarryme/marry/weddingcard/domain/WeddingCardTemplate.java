@@ -14,7 +14,6 @@ import javax.persistence.*;
 @Setter
 @Table(name = "wedding_card_template")
 public class WeddingCardTemplate {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "wedding_card_template_id")

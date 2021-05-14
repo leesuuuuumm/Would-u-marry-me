@@ -40,7 +40,7 @@ public class Story {
     private Storyboard storyboard;
 
 
-    @OneToOne( fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "spot_id")
     private Spot spot;
 
