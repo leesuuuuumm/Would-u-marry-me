@@ -6,8 +6,8 @@ import styles from "./storyTemplate2.module.css";
 import ReactHtmlParser from "react-html-parser";
 
 const StoryTemplate2 = () => {
-  const [Img, setImg] = useState();
-  const [imgFile, setImgFile] = useState();
+  const [Img, setImg] = useState(null);
+  const [imgFile, setImgFile] = useState(null);
   const [imgInput, setImgInput] = useState(false);
   const [onTextEditor, setOnTextEditor] = useState(false);
   const [imageHoverCheck1, setImageHoverCheck1] = useState(false);

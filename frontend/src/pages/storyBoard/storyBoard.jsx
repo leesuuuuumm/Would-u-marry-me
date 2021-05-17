@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styles from './storyBoard.module.css';
 
+import api from '../../service/api';
+import { useParams } from 'react-router';
+
 import StepProgressBar from '../../components/stepProgressBar/stepProgressBar';
 import MoveMyStoryBoardButton from '../../components/moveMyStoryBoardButton/moveMyStoryBoardButton';
 import { NextButton, PrevButton } from '../../components/prevNextButton/prevNextButton';
@@ -10,8 +13,12 @@ import CarouselType2 from '../../components/carousels/carouselType2/carouselType
 import CarouselType3 from '../../components/carousels/carouselType3/carouselType3';
 import CarouselType4 from '../../components/carousels/carouselType4/carouselType4';
 import CarouselType5 from '../../components/carousels/carouselType5/carouselType5';
-import api from '../../service/api';
-import { useParams } from 'react-router';
+
+import StoryTemplate1 from '../../components/storyTemplate/storyTemplate1/storyTemplate1';
+import StoryTemplate2 from '../../components/storyTemplate/storyTemplate2/storyTemplate2';
+import StoryTemplate3 from '../../components/storyTemplate/storyTemplate3/storyTemplate3';
+import StoryTemplate4 from '../../components/storyTemplate/storyTemplate4/storyTemplate4';
+import StoryTemplate5 from '../../components/storyTemplate/storyTemplate5/storyTemplate5';
 
 
 
@@ -36,6 +43,12 @@ const StoryBoard = () => {
   const [storyId, setStoryId] = useState(null);
   const [storyTemplateId, setStoryTemplateId] = useState(null);
 
+  const [image1, setImage1] = useState(null);
+  const [image2, setImage2] = useState(null);
+  const [image3, setImage3] = useState(null);
+  const [text1, setText1] = useState(null);
+  const [text2, setText2] = useState(null);
+  
 
 
   useEffect(() => {
@@ -52,10 +65,21 @@ const StoryBoard = () => {
         } else {
           newSaveCheck[8] = true;
         }
-        res.data.data.stories.reverse().forEach(story => {
-          setCurrentStep(3);
-          // index 0부터 온다고 가정하고 했음.
-          newSaveCheck[story.index + 3] = true;
+        if (res.data.data.stories) {
+          setCurrentStep(res.data.data.stories.length * 3 + 3);
+        }
+        res.data.data.stories.forEach(story => {
+          newSaveCheck[story.index * 3 + 0] = true;
+          newSaveCheck[story.index * 3 + 1] = true;
+          if (story.template === 1 && story.comments.length === 2 && story.images.length === 2) {
+            newSaveCheck[story.index * 3 + 2] = true;
+          } else if (story.template === 2 && story.comments.length === 1 && story.images.length === 1) {
+            newSaveCheck[story.index * 3 + 2] = true;
+          } else if ((story.template === 3 || story.template === 4 || story.template ===5) && story.comments.length === 1 && story.images.length === 3) {
+            newSaveCheck[story.index * 3 + 2] = true;
+          } else {
+            newSaveCheck[story.index * 3 + 2] = false;
+          }
         })
         if (res.data.data.character == null) {
           setCurrentStep(2);
@@ -86,6 +110,7 @@ const StoryBoard = () => {
     currentStep < 21 
     ? setCurrentStep(currentStep + 1)
     : setCurrentStep(0);
+    setSaveCheck(newSaveCheck);
   }
 
   const moveNextStep = () => {
@@ -128,9 +153,9 @@ const StoryBoard = () => {
         .catch((err) => {
           console.error(err);
         })
-    } else if (currentStep === 3 && spotId !== null) {
+    } else if ((currentStep === 3 || currentStep === 6 || currentStep === 9 || currentStep === 12 || currentStep === 15 || currentStep === 18) && spotId !== null) {
       api.post('story', {
-        index: 1,
+        index: parseInt(currentStep / 3),
         spotId,
         storyBoardId: id
       }, {
@@ -143,7 +168,7 @@ const StoryBoard = () => {
         .catch((err) => {
           console.error(err);
         })
-    } else if (currentStep === 4 && storyTemplateId !== null) {
+    } else if ((currentStep === 4 || currentStep === 7 || currentStep === 10 || currentStep === 13 || currentStep === 16) && storyTemplateId !== null) {
       api.put('storytemplate', {
         storyId,
         storyTemplateId
@@ -158,6 +183,35 @@ const StoryBoard = () => {
           console.error(err);
         })
       _moveNextStep();
+    } else if (currentStep === 5 || currentStep === 8 || currentStep === 11 || currentStep === 14 || currentStep === 17 ) {
+      if (storyTemplateId == 1) {
+
+      } else if (storyTemplateId === 2) {
+
+      } else if (storyTemplateId === 3 || storyTemplateId === 4 || storyTemplateId === 5) {
+        const data = new FormData();
+        data.append("storyId", storyId);
+        data.append("image1", image1);
+        data.append("image2", image2);
+        data.append("image3", image3);
+        data.append("text1", text1);
+
+        api.put('story/third', data, {
+          headers: {
+            Authorization: localStorage.getItem("jwt"),
+            "Content-Type": "multipart/form-data"
+          }
+        })
+          .then((res) => {
+            console.log(res);
+            
+            _moveNextStep();
+          })
+          .catch((err) => {
+            console.error(err);
+          })
+        _moveNextStep();
+      }
     }
     // _moveNextStep();
   };
@@ -177,25 +231,9 @@ const StoryBoard = () => {
       className={styles['story-board-container']}
     >
       <StepProgressBar 
-        currentStep={
-          2 < currentStep && currentStep < 6 ? 3
-          : 5 < currentStep && currentStep < 9 ? 4
-          : 8 < currentStep && currentStep < 12 ? 5
-          : 11 < currentStep && currentStep < 15 ? 6
-          : 14 < currentStep && currentStep < 18 ? 7
-          : 17 < currentStep && currentStep < 21 ? 8
-          : currentStep
-        }
+        currentStep={currentStep}
         setCurrentStep={setCurrentStep}
-        saveCheck={[
-          saveCheck[0], saveCheck[1], saveCheck[2], 
-          saveCheck[3] && saveCheck[4] && saveCheck[5],
-          saveCheck[6] && saveCheck[7] && saveCheck[8],
-          saveCheck[9] && saveCheck[10] && saveCheck[11],
-          saveCheck[12] && saveCheck[13] && saveCheck[14],
-          saveCheck[15] && saveCheck[16] && saveCheck[17],
-          saveCheck[18] && saveCheck[19] && saveCheck[20],
-        ]}
+        saveCheck={saveCheck}
       />
       <MoveMyStoryBoardButton />
       {
@@ -222,21 +260,75 @@ const StoryBoard = () => {
               />
             )
           }
-          else if (currentStep === 3) {
+          else if (currentStep === 3 || currentStep === 6 || currentStep === 9 || currentStep === 12 || currentStep === 15 || currentStep ===18) {
             return (
               <CarouselType4 
                 setSpotId={setSpotId}
               />
             )
           }
-          else if (currentStep === 4) {
+          else if (currentStep === 4 || currentStep === 7 || currentStep === 10 || currentStep === 13 || currentStep === 16 || currentStep === 19) {
             return (
               <CarouselType5
                 setStoryTemplateId={setStoryTemplateId}
               />
             )
           }
-          else if (currentStep === 5) {}
+          else if (currentStep === 5 || currentStep === 8 || currentStep === 11 || currentStep === 14 || currentStep === 17) {
+            // if (template == 1) {
+            
+            // }
+            if (storyTemplateId === 1) {
+              return (
+                <StoryTemplate1 
+                  setImage1={setImage1}
+                  setImage2={setImage2}
+                  setText1={setText1}
+                  setText2={setText2}
+                />
+              )
+            } else if (storyTemplateId === 2) {
+              return(
+                <StoryTemplate2 
+                  setImage1={setImage1}
+                  setText1={setText1}
+                />
+              )
+            } else if (storyTemplateId === 3) {
+              return(
+                <StoryTemplate3 
+                  image1={image1}
+                  setImage1={setImage1}
+                  image2={image2}
+                  setImage2={setImage2}
+                  image3={image3}
+                  setImage3={setImage3}
+                  text1={text1}
+                  setText1={setText1}
+                />
+              )
+            } else if (storyTemplateId === 4) {
+              return(
+                <StoryTemplate4 
+                  setImage1={setImage1}
+                  setImage2={setImage2}
+                  setImage3={setImage3}
+                  text1={text1}
+                  setText1={setText1}
+                />
+              )
+            } else if (storyTemplateId === 5) {
+              return(
+                <StoryTemplate5 
+                  setImage1={setImage1}
+                  setImage2={setImage2}
+                  setImage3={setImage3}
+                  text1={text1}
+                  setText1={setText1}
+                />
+              )
+            }
+          }
         })()
       }
       <PrevButton 
